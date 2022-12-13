@@ -41,7 +41,7 @@ export class Dir {
     const aParts = this.absoluteLocationFor(from);
     const bParts = this.absoluteLocationFor(part);
     let index = 0;
-    const matching = [];
+    const matching = new Array<string>;
     while(index < Math.min(aParts.length, bParts.length) && bParts[index] === aParts[index]) {
       matching.push(aParts[index]);
       index = index + 1;
