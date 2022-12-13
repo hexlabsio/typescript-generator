@@ -1,0 +1,1 @@
+export type Builder<T> = T | ((builder: T) => T);
