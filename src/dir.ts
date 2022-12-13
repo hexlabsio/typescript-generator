@@ -9,9 +9,7 @@ export class Dir {
     private parent?: Dir,
     private files: FilePart[] = [],
     private dirs: Dir[] = []
-  ) {
-    console.log(parent, files, dirs);
-  }
+  ) {}
 
   add(...files: FilePart[]): this {
     this.files.push(...files.map(it => {
@@ -54,6 +52,10 @@ export class Dir {
       return ['.', ...bParts.slice(matching.length)].join('/')
     }
     return [...new Array(numUpTree - 1).fill('..'), ...bParts.slice(matching.length)].join('/');
+  }
+
+  get(): { name: string; files: FilePart[]; dirs: Dir[] } {
+    return { name: this.name, files: this.files, dirs: this.dirs };
   }
 
   static create(name: string): Dir {
