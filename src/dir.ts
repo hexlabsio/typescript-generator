@@ -1,6 +1,11 @@
+import { mkdirSync, writeFileSync } from 'fs';
+import path from 'path';
+import prettier from 'prettier';
+
 export interface FilePart {
   parent?: Dir;
   name: string;
+  print(): string;
 }
 
 export class Dir {
@@ -56,6 +61,15 @@ export class Dir {
 
   get(): { name: string; files: FilePart[]; dirs: Dir[] } {
     return { name: this.name, files: this.files, dirs: this.dirs };
+  }
+
+  write(location?: string, transform: (file: FilePart) => string = file => prettier.format(file.print(), { parser: 'typescript', semi: false})): void {
+    const directory = path.join(location ?? '.', this.name).normalize();
+    mkdirSync(directory, { recursive: true });
+    this.dirs.forEach(it => it.write(directory));
+    this.files.forEach(it => {
+      writeFileSync(path.join(directory, it.name), transform(it));
+    });
   }
 
   static create(name: string): Dir {

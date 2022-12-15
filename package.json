@@ -86,5 +86,8 @@
     "ts-jest": "^27.0.2",
     "ts-loader": "^6.2.2",
     "typescript": "^4.8"
+  },
+  "dependencies": {
+    "prettier": "^2.8.1"
   }
 }
