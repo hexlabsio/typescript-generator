@@ -11,6 +11,18 @@ export class Parameter {
     private spread?: boolean
   ) {}
 
+  parts(): {
+    name: string,
+    typeExpression?: TypeExpression,
+    spread?: boolean,
+  } {
+    return {
+      name: this.name,
+      typeExpression: this.typeExpression,
+      spread: this.spread
+    }
+  }
+
   spreadArg(): this {
     this.spread = true;
     return this;
@@ -51,6 +63,34 @@ export class TsFunction {
     private body?: Block,
     private type: 'lambda' | 'named' = 'named'
   ) {}
+
+  parts(): {
+    name?: string,
+    method: boolean,
+    isAsynchronous: boolean,
+    access?: AccessKeyword,
+    isStatic?: boolean,
+    isAbstract?: boolean,
+    parameters: Parameter[],
+    generics: Generic[],
+    returnType?: TypeExpression,
+    body?: Block,
+    type: 'lambda' | 'named'
+  } {
+    return {
+      name: this.name,
+      method: this.method,
+      isAsynchronous: this.isAsynchronous,
+      access: this.access,
+      isStatic: this.isStatic,
+      isAbstract: this.isAbstract,
+      parameters: this.parameters,
+      generics: this.generics,
+      returnType: this.returnType,
+      body: this.body,
+      type: this.type,
+    }
+  }
 
   isAsync(): this {
     this.isAsynchronous = true;

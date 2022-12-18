@@ -2,11 +2,15 @@ import { Printable, Printer } from './printer';
 
 export class Block {
 
-  private constructor(private parts: (string | Printable)[] = []) {
+  private constructor(private bodyParts: (string | Printable)[] = []) {
+  }
+
+  parts(): { parts: (string | Printable)[] } {
+    return { parts: this.bodyParts }
   }
 
   add(part: string | Printable): this {
-    this.parts.push(part);
+    this.bodyParts.push(part);
     return this;
   }
 
@@ -15,6 +19,6 @@ export class Block {
   }
 
   print(printer: Printer): string {
-    return this.parts.reduce((p, next) => typeof next === 'string' ? p.printLine(next) : p.print(next), printer).get();
+    return this.bodyParts.reduce((p, next) => typeof next === 'string' ? p.printLine(next) : p.print(next), printer).get();
   }
 }

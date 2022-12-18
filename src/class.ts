@@ -16,6 +16,17 @@ export class ConstructorParameter extends Parameter {
     super(name, typeExpression, spread);
   }
 
+  parts(): ReturnType<typeof Parameter.prototype.parts> & {
+    access?: AccessKeyword,
+    readonly?: boolean
+  } {
+    return {
+      ...super.parts(),
+      access: this.access,
+      readonly: this.readonly
+    }
+  }
+
   isReadonly(): this {
     this.readonly = true;
     return this;
@@ -115,6 +126,26 @@ export class TsClass{
     private body?: Block,
     private methods: TsFunction[] = []
   ) {}
+
+  parts(): {
+    name: string,
+    isAbstract: boolean,
+    extension?: string,
+    implementing: string[],
+    creator?: Constructor,
+    body?: Block,
+    methods: TsFunction[]
+  } {
+    return {
+      name: this.name,
+      isAbstract: this.isAbstract,
+      extension: this.extension,
+      implementing: this.implementing,
+      creator: this.creator,
+      body: this.body,
+      methods: this.methods
+    }
+  }
 
   makeAbstract(): this {
     this.isAbstract = true;
