@@ -42,7 +42,7 @@ export class Dir {
     return path.reverse();
   }
 
-  static relativeLocationBetween(fileName: string, bParts: string[], aParts: string[]): string {
+  static relativeLocationBetween(fileName: string, aParts: string[], bParts: string[]): string {
     let index = 0;
     const matching = new Array<string>;
     while(index < Math.min(aParts.length, bParts.length) && bParts[index] === aParts[index]) {
