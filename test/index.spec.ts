@@ -23,17 +23,17 @@ describe('test', () => {
     console.log(TsFile.create('test-builder.ts').append(myBuilder, { exported: true, isDefault: true }).print());
   })
 
-  it('should make relative dir', () => {
-    const other = TsFile.create('Other');
-    const childDir = Dir.create('xyz').add(other);
-    const test = TsFile.create('Test');
-     Dir.create('models')
-      .add(test)
-      .child(childDir);
-     expect(Dir.absoluteLocationFor(other)).toEqual(['models', 'xyz', 'Other']);
-     expect(Dir.absoluteLocationFor(test)).toEqual(['models', 'Test']);
-     //import Test from inside Other file
-     expect(Dir.relativeLocationFor(test, other)).toEqual('../Test')
-     expect(Dir.relativeLocationBetween('Test', ['models', 'xyz', 'X'], ['models', 'Test'])).toEqual('../Test')
+  it('should make relative dir2', () => {
+    const one = TsFile.create('One');
+    const oneDir = Dir.create('b').add(one);
+    const two = TsFile.create('Two');
+    const twoDir = Dir.create('a')
+      .add(two)
+      .child(oneDir);
+    //In a/b/One.ts import {Two} from '../Two';
+    expect(Dir.importLocation(Dir.absoluteLocationFor(oneDir), Dir.absoluteLocationFor(two))).toEqual('../Two')
+    //In a/Two.ts import {One} from './b/One';
+    expect(Dir.importLocation(Dir.absoluteLocationFor(twoDir), Dir.absoluteLocationFor(one))).toEqual('./b/One')
+
   })
 })

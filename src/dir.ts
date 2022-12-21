@@ -5,13 +5,12 @@ import prettier from 'prettier';
 export interface FilePart {
   parent?: Dir;
   name: string;
-  print(): string;
 }
 
 export class Dir {
   constructor(
-    private name: string,
-    private parent?: Dir,
+    public name: string,
+    public parent?: Dir,
     private files: FilePart[] = [],
     private dirs: Dir[] = []
   ) {}
@@ -42,27 +41,24 @@ export class Dir {
     return path.reverse();
   }
 
-  static relativeLocationBetween(fileName: string, aParts: string[], bParts: string[]): string {
+  /**
+   *
+   * @param currentLocation directory location of current file
+   * @param imported location of file plus the name of the file
+   */
+  static importLocation(currentLocation: string[], imported: string[]): string {
     let index = 0;
     const matching = new Array<string>;
-    while(index < Math.min(aParts.length, bParts.length) && bParts[index] === aParts[index]) {
-      matching.push(aParts[index]);
+    while(index < Math.min(currentLocation.length, imported.length) && imported[index] === currentLocation[index]) {
+      matching.push(currentLocation[index]);
       index = index + 1;
     }
-    const numUpTree = bParts.length - matching.length;
-    if(numUpTree === 0) {
-      return `./${fileName}`
+    const current = currentLocation.slice(index);
+    const importLocation = imported.slice(index);
+    if(current.length === 0) {
+      return ['.', ...importLocation].join('/');
     }
-    if(numUpTree === 1) {
-      return ['..', ...bParts.slice(matching.length)].join('/')
-    }
-    return [...new Array(numUpTree - 1).fill('..'), ...bParts.slice(matching.length)].join('/');
-  }
-
-  static relativeLocationFor(part: FilePart, from: FilePart): string {
-    const aParts = this.absoluteLocationFor(from);
-    const bParts = this.absoluteLocationFor(part);
-    return this.relativeLocationBetween(part.name, aParts, bParts)
+    return [...current.map(() => '..'), ...importLocation].join('/');
   }
 
   get(): { name: string; files: FilePart[]; dirs: Dir[] } {
@@ -70,7 +66,7 @@ export class Dir {
   }
 
 
-  write(location?: string, transform: (file: FilePart) => string = file => prettier.format(file.print(), { parser: 'typescript', semi: false})): void {
+  write(location?: string, transform: (file: FilePart) => string = file => prettier.format((file as any).print(), { parser: 'typescript', semi: false})): void {
     const directory = path.join(location ?? '.', this.name).normalize();
     mkdirSync(directory, { recursive: true });
     this.dirs.forEach(it => it.write(directory));
