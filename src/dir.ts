@@ -63,6 +63,7 @@ export class Dir {
     return { name: this.name, files: this.files, dirs: this.dirs };
   }
 
+
   write(location?: string, transform: (file: FilePart) => string = file => prettier.format(file.print(), { parser: 'typescript', semi: false})): void {
     const directory = path.join(location ?? '.', this.name).normalize();
     mkdirSync(directory, { recursive: true });

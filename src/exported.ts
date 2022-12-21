@@ -32,7 +32,7 @@ export class Imports {
         (defaultImport && !defaultImport.alias) ? defaultImport.name : undefined,
         importStrings ? `{ ${importStrings} }` : undefined
       ].filter(it => !!it).join(', ');
-      return `import ${strings} from ${from}`
+      return `import ${strings} from '${from}'`
     }).join('\n');
   }
 
