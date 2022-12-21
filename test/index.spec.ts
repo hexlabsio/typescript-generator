@@ -11,7 +11,7 @@ describe('test', () => {
             )
       )
       .withMethod(
-        TsFunction.create('create').makeStatic()
+        TsFunction.create('create').makeStatic().withDescription('/**\n* xyz\n*/')
           .withParameters(Parameter.create('name', 'string'))
           .withReturnType('MyBuilder')
           .withBody(body =>

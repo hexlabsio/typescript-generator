@@ -52,6 +52,7 @@ export class Parameter {
 export class TsFunction {
   private constructor(
     private name?: string,
+    private description?: string,
     private method = false,
     private isAsynchronous = false,
     private access?: AccessKeyword,
@@ -63,6 +64,11 @@ export class TsFunction {
     private body?: Block,
     private type: 'lambda' | 'named' = 'named'
   ) {}
+
+  withDescription(description: string): this {
+    this.description = description;
+    return this;
+  }
 
   parts(): {
     name?: string,
@@ -166,6 +172,9 @@ export class TsFunction {
 
   print(printer: Printer): string {
     const indented = printer.print();
+    if(this.description) {
+      indented.printLine(this.description);
+    }
     const start = (this.type === 'lambda' ? indented : indented.printSpaced(
       this.access,
       this.isStatic && 'static',
