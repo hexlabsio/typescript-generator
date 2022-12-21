@@ -54,7 +54,7 @@ export class Dir {
       return `./${fileName}`
     }
     if(numUpTree === 1) {
-      return ['.', ...bParts.slice(matching.length)].join('/')
+      return ['..', ...bParts.slice(matching.length)].join('/')
     }
     return [...new Array(numUpTree - 1).fill('..'), ...bParts.slice(matching.length)].join('/');
   }

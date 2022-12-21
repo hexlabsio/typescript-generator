@@ -1,4 +1,4 @@
-import { ConstructorParameter, Expression, Parameter, TsClass, TsFile, TsFunction } from '../src';
+import { ConstructorParameter, Expression, Parameter, TsClass, TsFile, TsFunction, Dir } from '../src';
 
 describe('test', () => {
   it('should', () => {
@@ -21,5 +21,19 @@ describe('test', () => {
           )
       );
     console.log(TsFile.create('test-builder.ts').append(myBuilder, { exported: true, isDefault: true }).print());
+  })
+
+  it('should make relative dir', () => {
+    const other = TsFile.create('Other');
+    const childDir = Dir.create('xyz').add(other);
+    const test = TsFile.create('Test');
+     Dir.create('models')
+      .add(test)
+      .child(childDir);
+     expect(Dir.absoluteLocationFor(other)).toEqual(['models', 'xyz', 'Other']);
+     expect(Dir.absoluteLocationFor(test)).toEqual(['models', 'Test']);
+     //import Test from inside Other file
+     expect(Dir.relativeLocationFor(test, other)).toEqual('../Test')
+     expect(Dir.relativeLocationBetween('Test', ['models', 'xyz', 'X'], ['models', 'Test'])).toEqual('../Test')
   })
 })
