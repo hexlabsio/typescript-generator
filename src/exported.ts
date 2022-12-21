@@ -27,7 +27,7 @@ export class Imports {
       const imports = this.imports.filter(it => it.from === from);
       const defaultImport = imports.find(it => it.isDefault);
       const otherImports = imports.filter(it => !it.isDefault || it.alias);
-      const importStrings = otherImports.map(it => `${it.name}${it.alias ? ` as ${it.alias}` : ''}`).join(', ')
+      const importStrings = [...new Set(otherImports.map(it => `${it.name}${it.alias ? ` as ${it.alias}` : ''}`))].join(', ')
       const strings = [
         (defaultImport && !defaultImport.alias) ? defaultImport.name : undefined,
         importStrings ? `{ ${importStrings} }` : undefined
