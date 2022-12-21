@@ -72,6 +72,19 @@ export class Dir {
     });
   }
 
+  private getNextChild(name: string): Dir {
+    const current = this.dirs.find(it => it.name === name);
+    if(current) return current;
+    const child = Dir.create(name);
+    this.child(child);
+    return child;
+  }
+
+  getChildAt(location?: string): Dir {
+    if(!location) return this;
+    return location.split('/').reduce((dir, next) => dir.getNextChild(next), this as Dir);
+  }
+
   static create(name: string): Dir {
     return new Dir(name);
   }
