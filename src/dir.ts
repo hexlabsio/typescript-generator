@@ -30,6 +30,8 @@ export class Dir {
     return this;
   }
 
+
+
   static absoluteLocationFor(part: FilePart): string[] {
     let parent = part.parent;
     const path = [part.name];
@@ -40,9 +42,7 @@ export class Dir {
     return path.reverse();
   }
 
-  static relativeLocationFor(part: FilePart, from: FilePart): string {
-    const aParts = this.absoluteLocationFor(from);
-    const bParts = this.absoluteLocationFor(part);
+  static relativeLocationBetween(fileName: string, bParts: string[], aParts: string[]): string {
     let index = 0;
     const matching = new Array<string>;
     while(index < Math.min(aParts.length, bParts.length) && bParts[index] === aParts[index]) {
@@ -51,12 +51,18 @@ export class Dir {
     }
     const numUpTree = bParts.length - matching.length;
     if(numUpTree === 0) {
-      return `./${part.name}`
+      return `./${fileName}`
     }
     if(numUpTree === 1) {
       return ['.', ...bParts.slice(matching.length)].join('/')
     }
     return [...new Array(numUpTree - 1).fill('..'), ...bParts.slice(matching.length)].join('/');
+  }
+
+  static relativeLocationFor(part: FilePart, from: FilePart): string {
+    const aParts = this.absoluteLocationFor(from);
+    const bParts = this.absoluteLocationFor(part);
+    return this.relativeLocationBetween(part.name, aParts, bParts)
   }
 
   get(): { name: string; files: FilePart[]; dirs: Dir[] } {
